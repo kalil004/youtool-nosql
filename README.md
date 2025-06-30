@@ -153,13 +153,13 @@ python app.py
 
 ### 🧪 Vídeo mostrando a aplicação em funcionamento
 
-🔗 Exemplo: ![DemonstraçãoProjeto](media/datacollectyoutube.gif)
+![DemonstraçãoProjeto](media/datacollectyoutube.gif)
 
 ---
 
 ### 📊 Visualização de dados armazenados
 
-🔗 Exemplo: ![DemonstraçãoMongo](media/mongodbdata.gif)
+![DemonstraçãoMongo](media/mongodbdata.gif)
 
 ---
 
@@ -183,7 +183,4 @@ pymongo
 ---
 
 ```
-
 Desenvolvido por Kalil Alves e Enzo Pereira.
-
----
