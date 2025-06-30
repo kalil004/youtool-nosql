@@ -1,11 +1,12 @@
 from pymongo import MongoClient
-from config import MONGO_URI, DB_NAME
+from conf import MONGO_URI, DB_NAME
 
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 
-def save_transcript(video_id, transcript):
-    db['transcripts'].insert_one({
-        'video_id': video_id,
-        'transcript': transcript
-    })
+def save_video_data(video_id, data):
+    db['youtube_data'].replace_one(
+        {"video_id": video_id},
+        data,
+        upsert=True
+    )

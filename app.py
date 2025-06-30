@@ -1,24 +1,27 @@
 from flask import Flask, request, render_template
-from transcript_extractor import get_transcript
-from database import save_transcript
+from youtube_data_extractor import get_channel_data
+from database import save_video_data
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    transcript = None
+    data = {}
     error = None
 
     if request.method == 'POST':
-        video_id = request.form['video_id']
-        result = get_transcript(video_id)
+        channel_id = request.form['channel_id'].strip()
+        result = get_channel_data(channel_id)
+
         if 'error' in result:
             error = result['error']
         else:
-            transcript = result
-            save_transcript(video_id, transcript)
+            data = result
+            # Salvar cada vídeo individualmente
+            for video in result['videos']:
+                save_video_data(video['video_id'], video)
 
-    return render_template('index.html', transcript=transcript, error=error)
+    return render_template('index.html', data=data, error=error)
 
 if __name__ == '__main__':
     app.run(debug=True)

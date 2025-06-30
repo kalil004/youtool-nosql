@@ -2,26 +2,177 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Coletor de Transcrições do YouTube</title>
+    <title>Coletor de Dados do YouTube</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 40px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #d81b60;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #d81b60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c2185b;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            color: #222;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 20px;
+        }
+
+        h4 {
+            margin-top: 16px;
+            font-size: 17px;
+            color: #555;
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 30px 0;
+        }
+
+        .highlight {
+            background-color: #fef4f6;
+            padding: 10px;
+            border-left: 4px solid #d81b60;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Insira o ID do vídeo do YouTube</h1>
+    <h1>Coletor de Dados do YouTube</h1>
     <form method="POST">
-        <input type="text" name="video_id" placeholder="Ex: dQw4w9WgXcQ" required>
-        <button type="submit">Buscar Transcrição</button>
+        <input type="text" name="channel_id" placeholder="Ex: UC_x5... ou @nome" required>
+        <button type="submit">Buscar Dados</button>
     </form>
 
     {% if error %}
-        <p style="color: red;">Erro: {{ error }}</p>
+        <p class="error">Erro: {{ error }}</p>
     {% endif %}
 
-    {% if transcript %}
-        <h2>Transcrição:</h2>
-        <ul>
-            {% for item in transcript %}
-                <li>{{ item.start }}s - {{ item.text }}</li>
-            {% endfor %}
-        </ul>
+    {% if data.channel_info %}
+        <div class="card">
+            <h2>Informações do Canal:</h2>
+            <ul>
+                <li><strong>Nome:</strong> {{ data.channel_info.title }}</li>
+                <li><strong>Descrição:</strong> {{ data.channel_info.description }}</li>
+                <li><strong>Inscritos:</strong> {{ data.channel_info.subscriber_count }}</li>
+                <li><strong>Vídeos:</strong> {{ data.channel_info.video_count }}</li>
+                <li><strong>Visualizações Totais:</strong> {{ data.channel_info.view_count }}</li>
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if data.videos %}
+        <h2>Vídeos Recentes:</h2>
+        {% for video in data.videos %}
+            <div class="card">
+                <h3>{{ video.metadata.title }}</h3>
+                <ul>
+                    <li><strong>Publicado:</strong> {{ video.metadata.published_at }}</li>
+                    <li><strong>Visualizações:</strong> {{ video.metadata.view_count }}</li>
+                    <li><strong>Likes:</strong> {{ video.metadata.like_count }}</li>
+                </ul>
+
+                {% if video.transcript %}
+                    <h4>Transcrição:</h4>
+                    <ul class="highlight">
+                        {% for item in video.transcript %}
+                            <li>{{ item.start }}s - {{ item.text }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if video.comments %}
+                    <h4>Comentários:</h4>
+                    <ul class="highlight">
+                        {% for comment in video.comments %}
+                            <li><strong>{{ comment.author }}:</strong> {{ comment.text }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if video.live_chat %}
+                    <h4>Live Chat:</h4>
+                    <ul class="highlight">
+                        {% for msg in video.live_chat %}
+                            <li><strong>{{ msg.author }}:</strong> {{ msg.message }} ({{ msg.timestamp }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if video.super_chats %}
+                    <h4>Super Chats:</h4>
+                    <ul class="highlight">
+                        {% for sc in video.super_chats %}
+                            <li><strong>{{ sc.author }}:</strong> {{ sc.message }} - {{ sc.amount }} ({{ sc.timestamp }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
     {% endif %}
 </body>
 </html>
