@@ -59,7 +59,7 @@ Crie um arquivo chamado `conf.py` com o seguinte conteúdo:
 YOUTUBE_API_KEY = 'SUA_CHAVE_AQUI'
 ```
 
-> Obtenha a chave em: [https://console.cloud.google.com/apis/credentials]([https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/marketplace/product/google/youtube.googleapis.com?q=search&referrer=search&inv=1&invt=Ab1m4g&project=youtool-464117))
+> Obtenha a chave em: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/marketplace/product/google/youtube.googleapis.com?q=search&referrer=search&inv=1&invt=Ab1m4g&project=youtool-464117)
 
 4. Configure o MongoDB em `config.py`:
 
